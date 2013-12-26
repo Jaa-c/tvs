@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>// Place global declarations here.
+int nova_lod = 0; 		// velikost nove vygenerovane lode, 0 = zadna lod, 1-3 = velikost
+int lod_velikost_1 = 10;	// celkovy pocet lodi velikosti 1, ktery ma byt vygenerovan pro simulaci
+int lod_velikost_2 = 10;
+int lod_velikost_3 = 10;
+int lod_dok_1 = 0;		// jaka lod se prave nachazi v doku 1
+int lod_dok_2 = 0;
+int lod_dok_3 = 0;
+int delka_vykladky_1 = 3;	// jak dlouho trva vylozit lod velikosti 1
+int delka_vykladky_2 = 4;
+int delka_vykladky_3 = 5;
+broadcast chan dok1_pracuj;	// nakonec nepouzite, muze se hodit pozdeji, ale delalo to spis bordel
+broadcast chan dok2_pracuj;
+broadcast chan dok3_pracuj;
+broadcast chan generuj;
+clock global;			// globalni hodiny</declaration><template><name x="5" y="5">pristav</name><parameter>int &amp;nova_lod, int &amp;lod_dok_1, int &amp;lod_dok_2, int &amp;lod_dok_3</parameter><declaration>void cas_vykladky ()
+{
+   
+}</declaration><location id="id0" x="16" y="160"><name x="0" y="184">konec</name></location><location id="id1" x="16" y="-8"><name x="32" y="-8">Prirad_lod</name></location><location id="id2" x="16" y="-288"><name x="32" y="-320">Generuj_lod</name></location><init ref="id2"/><transition><source ref="id0"/><target ref="id0"/><nail x="-24" y="192"/><nail x="16" y="232"/><nail x="56" y="192"/></transition><transition><source ref="id1"/><target ref="id2"/><label kind="guard" x="-96" y="-224">nova_lod == 1 || 
+nova_lod == 2 ||
+nova_lod == 3</label><label kind="synchronisation" x="-80" y="-152">dok3_pracuj!</label><label kind="assignment" x="-136" y="-112">lod_dok_3 = nova_lod,
+nova_lod = 0</label></transition><transition><source ref="id1"/><target ref="id2"/><label kind="guard" x="-312" y="-208">nova_lod == 1 || 
+nova_lod == 2</label><label kind="synchronisation" x="-288" y="-152">dok2_pracuj!</label><label kind="assignment" x="-352" y="-112">lod_dok_2 = nova_lod,
+nova_lod = 0</label><nail x="-200" y="-32"/><nail x="-200" y="-264"/></transition><transition><source ref="id1"/><target ref="id2"/><label kind="guard" x="-480" y="-192">nova_lod == 1</label><label kind="synchronisation" x="-472" y="-152">dok1_pracuj!</label><label kind="assignment" x="-536" y="-112">lod_dok_1 = nova_lod,
+nova_lod = 0</label><nail x="-384" y="-8"/><nail x="-384" y="-288"/></transition><transition><source ref="id1"/><target ref="id0"/><label kind="guard" x="32" y="48">lod_velikost_1 + lod_velikost_2 + lod_velikost_3 == 0 &amp;&amp;
+lod_dok_1 == 0 &amp;&amp;
+lod_dok_2 == 0 &amp;&amp;
+lod_dok_3 == 0</label></transition><transition><source ref="id2"/><target ref="id1"/><label kind="synchronisation" x="256" y="-168">generuj!</label><nail x="248" y="-256"/><nail x="248" y="-48"/></transition></template><template><name>generator</name><parameter>broadcast chan &amp;generuj, int &amp;lod_velikost_1, int &amp;lod_velikost_2, int &amp;lod_velikost_3, int &amp;nova_lod</parameter><declaration>int posledni_lod = 0;</declaration><location id="id3" x="0" y="48"><name x="-16" y="72">cekej</name></location><location id="id4" x="0" y="-200"><name x="-24" y="-240">zvol_lod</name></location><init ref="id3"/><transition><source ref="id3"/><target ref="id4"/><label kind="synchronisation" x="-376" y="-96">generuj?</label><nail x="-312" y="112"/><nail x="-312" y="-296"/></transition><transition><source ref="id4"/><target ref="id3"/><label kind="guard" x="-280" y="-152">(posledni_lod != 1 ||
+lod_velikost_2 + lod_velikost_3 == 0) &amp;&amp;
+lod_velikost_1 &gt; 0</label><label kind="assignment" x="-280" y="-88">nova_lod = 1,
+lod_velikost_1--,
+posledni_lod = 1</label><nail x="-288" y="-160"/><nail x="-288" y="-8"/></transition><transition><source ref="id4"/><target ref="id3"/><label kind="guard" x="336" y="-152">(posledni_lod != 3 ||
+lod_velikost_1 + lod_velikost_2 == 0) &amp;&amp;
+lod_velikost_3 &gt; 0</label><label kind="assignment" x="336" y="-88">nova_lod = 3,
+lod_velikost_3--,
+posledni_lod = 3</label><nail x="328" y="-168"/><nail x="328" y="-16"/></transition><transition><source ref="id4"/><target ref="id3"/><label kind="guard" x="8" y="-152">(posledni_lod != 2 ||
+lod_velikost_1 + lod_velikost_3 == 0) &amp;&amp;
+lod_velikost_2 &gt; 0</label><label kind="assignment" x="8" y="-88">nova_lod = 2,
+lod_velikost_2--,
+posledni_lod = 2</label><nail x="0" y="-112"/></transition></template><template><name>dok</name><parameter>broadcast chan &amp;dok_pracuj, int &amp;delka_vykladky_1, int &amp;delka_vykladky_2, int &amp;delka_vykladky_3, int &amp;lod_dok</parameter><declaration>int cas_vykladky = 0;
+clock vykladani;
+
+int get_cas_vykladky (int lod)
+{
+  if(lod == 1){
+    return delka_vykladky_1;
+  } else if(lod == 2){
+    return delka_vykladky_2;
+  } else {
+    return delka_vykladky_3;
+  }
+}</declaration><location id="id5" x="-8" y="-8"><name x="-32" y="16">Plny_dok</name></location><location id="id6" x="-8" y="-144"><name x="-32" y="-184">Volny_dok</name></location><init ref="id6"/><transition><source ref="id5"/><target ref="id6"/><label kind="guard" x="-264" y="-136">cas_vykladky &gt;= vykladani</label><label kind="assignment" x="-264" y="-72">lod_dok = 0</label><nail x="-112" y="-72"/></transition><transition><source ref="id6"/><target ref="id5"/><label kind="synchronisation" x="96" y="-120">dok_pracuj?</label><label kind="assignment" x="96" y="-72">vykladani := 0,
+cas_vykladky = get_cas_vykladky(lod_dok)</label><nail x="88" y="-72"/></transition></template><system>// Place template instantiations here.
+gen = generator(generuj, lod_velikost_1, lod_velikost_2, lod_velikost_3, nova_lod);
+prist = pristav(nova_lod, lod_dok_1, lod_dok_2, lod_dok_3);
+dok1 = dok(dok1_pracuj, delka_vykladky_1, delka_vykladky_2, delka_vykladky_3, lod_dok_1);
+dok2 = dok(dok2_pracuj, delka_vykladky_1, delka_vykladky_2, delka_vykladky_3, lod_dok_2);
+dok3 = dok(dok3_pracuj, delka_vykladky_1, delka_vykladky_2, delka_vykladky_3, lod_dok_3);
+
+// List one or more processes to be composed into a system.
+system gen, prist, dok1, dok2, dok3;</system></nta>
