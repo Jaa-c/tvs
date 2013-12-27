@@ -13,7 +13,7 @@ E<> dok1.vykladani > 0
 /*
 
 */
-A[] prist.konec and global > 0
+E<> prist.Konec and cas <= 18
 
 /*
 
