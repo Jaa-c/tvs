@@ -49,9 +49,9 @@ broadcast chan dok2_pracuj;
 broadcast chan dok3_pracuj;
 broadcast chan generuj;
 
-//clock global;			// globalni hodiny</declaration><template><name x="8" y="8">pristav</name><parameter>int &amp;lod_dok_1, int &amp;lod_dok_2, int &amp;lod_dok_3</parameter><declaration>int currentBoat = -1;
+clock global;			// globalni hodiny</declaration><template><name x="8" y="8">pristav</name><parameter>int &amp;lod_dok_1, int &amp;lod_dok_2, int &amp;lod_dok_3</parameter><declaration>int currentBoat = -1;
 
-clock total_time;</declaration><location id="id0" x="-2120" y="-256"><name x="-2112" y="-248">cekej_na_gen</name></location><location id="id1" x="-2352" y="-88"><name x="-2368" y="-64">konec</name></location><location id="id2" x="-2352" y="-256"><name x="-2336" y="-248">Prirad_lod</name></location><location id="id3" x="-2352" y="-536"><name x="-2336" y="-568">Generuj_lod</name></location><init ref="id3"/><transition><source ref="id0"/><target ref="id2"/><label kind="guard" x="-2312" y="-344">isQueueFull() ||
+clock total_time;</declaration><location id="id0" x="-2120" y="-256"><name x="-2112" y="-248">cekej_na_gen</name></location><location id="id1" x="-2352" y="-88"><name x="-2368" y="-64">konec</name></location><location id="id2" x="-2352" y="-256"><name x="-2336" y="-248">Prirad_lod</name><committed/></location><location id="id3" x="-2352" y="-536"><name x="-2336" y="-568">Generuj_lod</name></location><init ref="id3"/><transition><source ref="id0"/><target ref="id2"/><label kind="guard" x="-2312" y="-344">isQueueFull() ||
 (  lod_velikost_1 + 
    lod_velikost_2 + 
    lod_velikost_3  ) &lt; 3</label><label kind="assignment" x="-2320" y="-280">currentBoat = deQueue()</label></transition><transition><source ref="id1"/><target ref="id1"/><nail x="-2392" y="-56"/><nail x="-2352" y="-16"/><nail x="-2312" y="-56"/></transition><transition><source ref="id2"/><target ref="id3"/><label kind="guard" x="-2496" y="-440">currentBoat &gt; 0 &amp;&amp;

@@ -3,6 +3,11 @@
 /*
 
 */
+E<> global > 0
+
+/*
+
+*/
 E<> dok1.vykladani > 0
 
 /*
