@@ -3,7 +3,7 @@
 /*
 
 */
-E<> global > 0
+E<> dok1.Plny_dok and dok2.Plny_dok and dok3.Plny_dok
 
 /*
 
@@ -13,7 +13,7 @@ E<> dok1.vykladani > 0
 /*
 
 */
-E<> prist.konec and prist.total_time < 1
+A[] prist.konec and global > 0
 
 /*
 
