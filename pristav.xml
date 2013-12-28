@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>// Place global declarations here.
 
-int[0,3]  nova_lod = 0; 		// velikost nove vygenerovane lode, 0 = zadna lod, 1-3 = velikost
+int[0,3]  nova_lod = 0; 	// velikost nove vygenerovane lode, 0 = zadna lod, 1-3 = velikost
 
-const int pocet_l1 = 4;  // celkovy pocet lodi velikosti 1, ktery ma byt vygenerovan pro simulaci
-const int pocet_l2 = pocet_l1;
+const int pocet_l1 = 4;  	// celkovy pocet lodi velikosti 1, ktery ma byt vygenerovan pro simulaci
+const int pocet_l2 = pocet_l1;	// pro zjednoduseni dotazu jsou vsechny stejne
 const int pocet_l3 = pocet_l1;
 
 //jak dlouho trva vylozit lod
 //predpoklad: vsechny lode stejne (lod velikosti 1 vyuzije jeden jerab, lod velikosti 3 vyuzije 3 jeraby)
 const int delka_vykladky = 6;	
 
-const int queue_size = pocet_l1 + pocet_l2 + pocet_l3; 	//celkovy pocet lodi, vygenerujeme frontu predem
+const int queue_size = pocet_l1 + pocet_l2 + pocet_l3; 	//celkovy pocet lodi (frontu vygenerujeme celou predem)
 
 
 int lod_velikost_1 = pocet_l1;	//aktualni pocet zbyvajicich lodi
 int lod_velikost_2 = pocet_l2;
 int lod_velikost_3 = pocet_l3;
 
-int[0,3] lod_dok_1 = 0;		// jaka lod se prave nachazi v doku 1
+int[0,3] lod_dok_1 = 0;		// jaka lod se prave nachazi v danem doku
 int[0,3] lod_dok_2 = 0;
 int[0,3] lod_dok_3 = 0;
 
-broadcast chan dok_pracuj;	// nakonec nepouzite, muze se hodit pozdeji, ale delalo to spis bordel
-chan dok_prazdny;
-
-chan prepni_pristav;
+broadcast chan dok_pracuj;	//rika dokum, aby zacaly s praci
+chan dok_prazdny;		//dok je prazdny
+chan prepni_pristav;		//prepina na druhy prostav
 
 int vylozeno = 0;  		//kolik zbozi mam aktualne vylozeno, ciste pro kontrolu
 int cas_prvni;			//cas hloupeho pristavu
-int cas = 0;			//celkovy cas, ktery vykladani zabralo
+int cas = 0;			//cas, ktery vykladani zabralo (na konci odpovídá chytrému přístavu)
 
-int queue[queue_size];
-int queue_bck[queue_size];
+int queue[queue_size];		//fronta
+int queue_bck[queue_size];	//zaloha fronty pro inicializaci druheho pristavu
 
 bool isQueueFull() {
   int i;
@@ -68,6 +67,7 @@ void updateTime() {
 }
 </declaration><template><name x="8" y="8">pristav</name><parameter>int[0,3] &amp;lod_dok_1, int[0,3] &amp;lod_dok_2, int[0,3] &amp;lod_dok_3</parameter><declaration>int currentBoat = -1;
 
+// secte lode ve vsech docich
 int sumDocks() {
 	return lod_dok_1 + lod_dok_2 + lod_dok_3;
 }</declaration><location id="id0" x="-2352" y="-32"><name x="-2392" y="-16">Cekej_na_dok</name><committed/></location><location id="id1" x="-1960" y="-536"><name x="-1984" y="-568">Napln_frontu</name></location><location id="id2" x="-2008" y="-256" color="#ff0000"><name x="-1984" y="-264">Konec</name></location><location id="id3" x="-2352" y="-256"><name x="-2456" y="-248">Napln_dok</name></location><location id="id4" x="-2352" y="-536"><name x="-2384" y="-568">Prirad_lod</name></location><init ref="id1"/><transition><source ref="id2"/><target ref="id2"/><label kind="guard" x="-1912" y="-264">false</label><label kind="comments">aby nenastal deadlock</label><nail x="-1992" y="-216"/><nail x="-1920" y="-216"/><nail x="-1920" y="-304"/><nail x="-1992" y="-304"/></transition><transition><source ref="id3"/><target ref="id3"/><label kind="synchronisation" x="-2400" y="-168">dok_prazdny?</label><label kind="assignment" x="-2400" y="-152">updateTime()</label><nail x="-2304" y="-200"/><nail x="-2304" y="-176"/><nail x="-2400" y="-176"/><nail x="-2400" y="-200"/></transition><transition><source ref="id3"/><target ref="id4"/><label kind="guard" x="-2504" y="-440">lod_dok_3 == 0 &amp;&amp;
@@ -99,7 +99,7 @@ posledni_lod = 2,
 enQueue(2)</label><nail x="0" y="-112"/></transition></template><template><name>dok</name><parameter>int[0,3] &amp;lod_dok</parameter><declaration>clock vykladani;
 
 </declaration><location id="id7" x="-8" y="-8"><name x="24" y="-16">Plny_dok</name><label kind="invariant" x="24" y="0">vykladani &lt;= delka_vykladky</label><committed/></location><location id="id8" x="-8" y="-144"><name x="-32" y="-184">Volny_dok</name><urgent/></location><init ref="id8"/><transition><source ref="id7"/><target ref="id7"/><label kind="synchronisation" x="-48" y="80">dok_pracuj?</label><nail x="-48" y="16"/><nail x="-48" y="72"/><nail x="24" y="72"/><nail x="24" y="24"/></transition><transition><source ref="id7"/><target ref="id8"/><label kind="synchronisation" x="-272" y="-104">dok_prazdny!</label><label kind="assignment" x="-272" y="-88">vylozeno += lod_dok,
-lod_dok = 0</label><nail x="-112" y="-72"/></transition><transition><source ref="id8"/><target ref="id7"/><label kind="guard" x="96" y="-120">lod_dok &gt; 0</label><label kind="synchronisation" x="96" y="-96">dok_pracuj?</label><label kind="assignment" x="96" y="-72">vykladani := 0</label><nail x="88" y="-72"/></transition></template><template><name>pristav_chytry</name><parameter>int[0,3] &amp;lod_dok_1, int[0,3] &amp;lod_dok_2, int[0,3] &amp;lod_dok_3</parameter><declaration>
+lod_dok = 0</label><nail x="-112" y="-72"/></transition><transition><source ref="id8"/><target ref="id7"/><label kind="guard" x="96" y="-120">lod_dok &gt; 0</label><label kind="synchronisation" x="96" y="-96">dok_pracuj?</label><label kind="assignment" x="96" y="-72">vykladani := 0</label><nail x="88" y="-72"/></transition></template><template><name>pristav_chytry</name><parameter>int[0,3] &amp;lod_dok_1, int[0,3] &amp;lod_dok_2, int[0,3] &amp;lod_dok_3</parameter><declaration>// je mozne pridat lod do doku
 bool canAddBoat() {
   int i;
   if(lod_dok_1 == 0) {
@@ -116,6 +116,7 @@ bool canAddBoat() {
   return false;
 }
 
+//vybere nejlepsi moznou lod pro dok dane velikosti
 int getBoat(int num) {
   int boat;
   int i;
@@ -134,8 +135,9 @@ int getBoat(int num) {
   return 0; //never happens
 }
 
+//opravi frontu (posune prvky na zacatek)
 void repairQueue() {
-  //opravim frontu
+ 
   int i, index, diff = 1;
 
   for(i = 0; i &lt; queue_size; i++) {
@@ -170,11 +172,11 @@ gen = generator(lod_velikost_1, lod_velikost_2, lod_velikost_3, nova_lod);
 dok1 = dok(lod_dok_1);
 dok2 = dok(lod_dok_2);
 dok3 = dok(lod_dok_3);
-prist = pristav(lod_dok_1, lod_dok_2, lod_dok_3);
-prist_ch = pristav_chytry(lod_dok_1, lod_dok_2, lod_dok_3);
+prist = pristav(lod_dok_1, lod_dok_2, lod_dok_3);		//hloupy pristav
+prist_chytry = pristav_chytry(lod_dok_1, lod_dok_2, lod_dok_3);	//chytry pristav
 
 
 // List one or more processes to be composed into a system.
 system 	gen, 
-	prist, prist_ch, dok1, dok2, dok3;
+	prist, prist_chytry, dok1, dok2, dok3;
 </system></nta>
