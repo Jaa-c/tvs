@@ -8,12 +8,12 @@ E<> dok1.Plny_dok and dok2.Plny_dok and dok3.Plny_dok
 /*
 
 */
-E<> prist.Konec and cas >= 55
+E<> prist.Konec and cas > 30
 
 /*
 jde dosahnout konce v case 18 (musi prid do doku 3 vzdy 3-3-3)
 */
-E<> prist.Konec and cas < 18
+E<> prist.Konec and cas == 18
 
 /*
 
