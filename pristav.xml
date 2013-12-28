@@ -58,18 +58,22 @@ void updateTime() {
 }
 </declaration><template><name x="8" y="8">pristav</name><parameter>int[0,3] &amp;lod_dok_1, int[0,3] &amp;lod_dok_2, int[0,3] &amp;lod_dok_3</parameter><declaration>int currentBoat = -1;
 
-</declaration><location id="id0" x="-2360" y="-72"><name x="-2400" y="-56">Cekej_na_dok</name><committed/></location><location id="id1" x="-1960" y="-536"><name x="-1984" y="-568">Napln_frontu</name></location><location id="id2" x="-2008" y="-256" color="#ff0000"><name x="-1984" y="-272">Konec</name></location><location id="id3" x="-2352" y="-256"><name x="-2384" y="-232">Napln_dok</name><urgent/></location><location id="id4" x="-2352" y="-536"><name x="-2384" y="-568">Prirad_lod</name></location><init ref="id1"/><transition><source ref="id3"/><target ref="id4"/><label kind="guard" x="-2504" y="-440">lod_dok_3 == 0 &amp;&amp;
-currentBoat &gt; 0</label><label kind="assignment" x="-2536" y="-376">lod_dok_3 = currentBoat</label></transition><transition><source ref="id0"/><target ref="id3"/><label kind="synchronisation" x="-2264" y="-160">dok_prazdny?</label><label kind="assignment" x="-2264" y="-144">updateTime()</label><nail x="-2272" y="-104"/><nail x="-2272" y="-200"/></transition><transition><source ref="id3"/><target ref="id0"/><label kind="guard" x="-2912" y="-184">(currentBoat == 3 &amp;&amp; lod_dok_3 != 0) ||
-(currentBoat == 2 &amp;&amp; lod_dok_3 != 0 &amp;&amp; lod_dok_2 != 0) ||
-(currentBoat == 1 &amp;&amp; lod_dok_3 + lod_dok_2 + lod_dok_1 == 6) ||
-(lod_dok_1 + lod_dok_2 + lod_dok_3  &gt; 0)</label><label kind="synchronisation" x="-2424" y="-160">dok_pracuj!</label><nail x="-2432" y="-200"/><nail x="-2432" y="-112"/></transition><transition><source ref="id1"/><target ref="id4"/><label kind="guard" x="-2216" y="-528">queue[queue_size-1] != 0</label><label kind="comments">naplnim frontu predem, aby se to pozdeji nepletlo mezi praci pristavu</label></transition><transition><source ref="id4"/><target ref="id3"/><label kind="guard" x="-2192" y="-464">queue[0] &gt; 0 ||
+int sumDocks() {
+	return lod_dok_1 + lod_dok_2 + lod_dok_3;
+}</declaration><location id="id0" x="-2352" y="-32"><name x="-2392" y="-16">Cekej_na_dok</name><committed/></location><location id="id1" x="-1960" y="-536"><name x="-1984" y="-568">Napln_frontu</name></location><location id="id2" x="-2008" y="-256" color="#ff0000"><name x="-1984" y="-272">Konec</name></location><location id="id3" x="-2352" y="-256"><name x="-2456" y="-248">Napln_dok</name></location><location id="id4" x="-2352" y="-536"><name x="-2384" y="-568">Prirad_lod</name></location><init ref="id1"/><transition><source ref="id3"/><target ref="id3"/><label kind="synchronisation" x="-2400" y="-168">dok_prazdny?</label><label kind="assignment" x="-2400" y="-152">updateTime()</label><nail x="-2304" y="-200"/><nail x="-2304" y="-176"/><nail x="-2400" y="-176"/><nail x="-2400" y="-200"/></transition><transition><source ref="id3"/><target ref="id4"/><label kind="guard" x="-2504" y="-440">lod_dok_3 == 0 &amp;&amp;
+currentBoat &gt; 0</label><label kind="assignment" x="-2536" y="-376">lod_dok_3 = currentBoat</label></transition><transition><source ref="id0"/><target ref="id3"/><label kind="synchronisation" x="-2232" y="-152">dok_prazdny?</label><label kind="assignment" x="-2232" y="-136">updateTime()</label><nail x="-2240" y="-80"/><nail x="-2240" y="-184"/></transition><transition><source ref="id3"/><target ref="id0"/><label kind="guard" x="-2912" y="-152">( currentBoat == 3 &amp;&amp; lod_dok_3 != 0 ) ||
+( currentBoat == 2 &amp;&amp; lod_dok_3 != 0 &amp;&amp; lod_dok_2 != 0 ) ||
+( currentBoat == 1 &amp;&amp; sumDocks() == 6 )|| 
+( currentBoat == 0 &amp;&amp; sumDocks()  &gt; 0 ) ||
+( currentBoat != 0 &amp;&amp; lod_dok_1 !=0 &amp;&amp; 
+  lod_dok_2 != 0 &amp;&amp; lod_dok_3 != 0 )</label><label kind="synchronisation" x="-2560" y="-96">dok_pracuj!</label><nail x="-2464" y="-184"/><nail x="-2464" y="-80"/></transition><transition><source ref="id1"/><target ref="id4"/><label kind="guard" x="-2216" y="-528">queue[queue_size-1] != 0</label><label kind="comments">naplnim frontu predem, aby se to pozdeji nepletlo mezi praci pristavu</label></transition><transition><source ref="id4"/><target ref="id3"/><label kind="guard" x="-2192" y="-464">queue[0] &gt; 0 ||
 (  lod_velikost_1 + 
    lod_velikost_2 + 
-   lod_velikost_3  ) == 0</label><label kind="assignment" x="-2192" y="-352">currentBoat = deQueue()</label><nail x="-2200" y="-480"/><nail x="-2200" y="-328"/></transition><transition><source ref="id2"/><target ref="id2"/><nail x="-1960" y="-224"/><nail x="-1920" y="-264"/><nail x="-1968" y="-296"/></transition><transition><source ref="id3"/><target ref="id4"/><label kind="guard" x="-2696" y="-440">lod_dok_2 == 0 &amp;&amp;
+   lod_velikost_3  ) == 0</label><label kind="assignment" x="-2192" y="-376">currentBoat = deQueue()</label><nail x="-2200" y="-480"/><nail x="-2200" y="-328"/></transition><transition><source ref="id2"/><target ref="id2"/><nail x="-1960" y="-224"/><nail x="-1920" y="-264"/><nail x="-1968" y="-296"/></transition><transition><source ref="id3"/><target ref="id4"/><label kind="guard" x="-2696" y="-440">lod_dok_2 == 0 &amp;&amp;
 currentBoat &gt; 0 &amp;&amp;
 currentBoat &lt; 3</label><label kind="assignment" x="-2736" y="-376">lod_dok_2 = currentBoat</label><nail x="-2552" y="-280"/><nail x="-2552" y="-512"/></transition><transition><source ref="id3"/><target ref="id4"/><label kind="guard" x="-2896" y="-440">lod_dok_1 == 0 &amp;&amp;
 currentBoat == 1</label><label kind="assignment" x="-2936" y="-376">lod_dok_1 = currentBoat</label><nail x="-2752" y="-256"/><nail x="-2752" y="-536"/></transition><transition><source ref="id3"/><target ref="id2"/><label kind="guard" x="-2240" y="-240">currentBoat == 0 &amp;&amp;
-lod_dok_1 + lod_dok_2 + lod_dok_3  == 0</label></transition></template><template><name>generator</name><parameter>int &amp;lod_velikost_1, int &amp;lod_velikost_2, int &amp;lod_velikost_3, int[0,3] &amp;nova_lod</parameter><declaration>int posledni_lod = 0;
+sumDocks()  == 0</label></transition></template><template><name>generator</name><parameter>int &amp;lod_velikost_1, int &amp;lod_velikost_2, int &amp;lod_velikost_3, int[0,3] &amp;nova_lod</parameter><declaration>int posledni_lod = 0;
 </declaration><location id="id5" x="0" y="48"><name x="-16" y="72">cekej</name></location><location id="id6" x="0" y="-200"><name x="-24" y="-240">zvol_lod</name></location><init ref="id5"/><transition><source ref="id5"/><target ref="id6"/><label kind="guard" x="-424" y="-96">!isQueueFull()</label><nail x="-312" y="112"/><nail x="-312" y="-296"/></transition><transition><source ref="id6"/><target ref="id5"/><label kind="guard" x="-280" y="-152">(posledni_lod != 1 ||
 lod_velikost_2 + lod_velikost_3 == 0) &amp;&amp;
 lod_velikost_1 &gt; 0</label><label kind="assignment" x="-280" y="-88">lod_velikost_1--,
@@ -84,7 +88,7 @@ lod_velikost_2 &gt; 0</label><label kind="assignment" x="8" y="-88">lod_velikost
 posledni_lod = 2,
 enQueue(2)</label><nail x="0" y="-112"/></transition></template><template><name>dok</name><parameter>int[0,3] &amp;lod_dok</parameter><declaration>clock vykladani;
 
-</declaration><location id="id7" x="-8" y="-8"><name x="24" y="-16">Plny_dok</name><label kind="invariant" x="24" y="0">vykladani &lt;= delka_vykladky</label><urgent/></location><location id="id8" x="-8" y="-144"><name x="-32" y="-184">Volny_dok</name><urgent/></location><init ref="id8"/><transition><source ref="id7"/><target ref="id7"/><label kind="synchronisation" x="-48" y="80">dok_pracuj?</label><nail x="-48" y="16"/><nail x="-48" y="72"/><nail x="24" y="72"/><nail x="24" y="24"/></transition><transition><source ref="id7"/><target ref="id8"/><label kind="synchronisation" x="-272" y="-112">dok_prazdny!</label><label kind="assignment" x="-272" y="-88">vylozeno += lod_dok,
+</declaration><location id="id7" x="-8" y="-8"><name x="24" y="-16">Plny_dok</name><label kind="invariant" x="24" y="0">vykladani &lt;= delka_vykladky</label><committed/></location><location id="id8" x="-8" y="-144"><name x="-32" y="-184">Volny_dok</name><urgent/></location><init ref="id8"/><transition><source ref="id7"/><target ref="id7"/><label kind="synchronisation" x="-48" y="80">dok_pracuj?</label><nail x="-48" y="16"/><nail x="-48" y="72"/><nail x="24" y="72"/><nail x="24" y="24"/></transition><transition><source ref="id7"/><target ref="id8"/><label kind="synchronisation" x="-272" y="-104">dok_prazdny!</label><label kind="assignment" x="-272" y="-88">vylozeno += lod_dok,
 lod_dok = 0</label><nail x="-112" y="-72"/></transition><transition><source ref="id8"/><target ref="id7"/><label kind="guard" x="96" y="-120">lod_dok &gt; 0</label><label kind="synchronisation" x="96" y="-96">dok_pracuj?</label><label kind="assignment" x="96" y="-72">vykladani := 0</label><nail x="88" y="-72"/></transition></template><template><name>pristav_chytry</name><parameter>int[0,3] &amp;lod_dok_1, int[0,3] &amp;lod_dok_2, int[0,3] &amp;lod_dok_3</parameter><declaration>
 bool canAddBoat() {
   int i;
@@ -148,8 +152,8 @@ gen = generator(lod_velikost_1, lod_velikost_2, lod_velikost_3, nova_lod);
 dok1 = dok(lod_dok_1);
 dok2 = dok(lod_dok_2);
 dok3 = dok(lod_dok_3);
-//prist = pristav(lod_dok_1, lod_dok_2, lod_dok_3);
-prist = pristav_chytry(lod_dok_1, lod_dok_2, lod_dok_3);
+prist = pristav(lod_dok_1, lod_dok_2, lod_dok_3);
+//prist = pristav_chytry(lod_dok_1, lod_dok_2, lod_dok_3);
 
 
 // List one or more processes to be composed into a system.
