@@ -31,6 +31,7 @@ int cas_prvni;			//cas hloupeho pristavu
 int cas = 0;			//celkovy cas, ktery vykladani zabralo
 
 int queue[queue_size];
+int queue_bck[queue_size];
 
 bool isQueueFull() {
   int i;
