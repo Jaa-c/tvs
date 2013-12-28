@@ -1,21 +1,26 @@
 //This file was generated from (Academic) UPPAAL 4.0.13 (rev. 4577), September 2010
 
 /*
-jen test, jestli je mozne zaplnit vsechny doky
+chytry pristav ma lepsi horni limit v nejhorsim pripade
 */
-E<> dok1.Plny_dok and dok2.Plny_dok and dok3.Plny_dok
+E<> prist_ch.Konec and cas > 36
 
 /*
-
+horni limit chytreho pristavu je mensi nez u hloupeho prostavu
 */
-E<> prist.Konec and cas > 30
+E<> prist.Konec and cas_prvni > 36
 
 /*
-jde dosahnout konce v case 18 (musi prid do doku 3 vzdy 3-3-3)
+jde dosahnout konce v optimalnim casu (ocekava stejny pocet vsech typu lodi)
 */
-E<> prist.Konec and cas == 18
+E<> prist_ch.Konec and cas == (queue_size / 3) * delka_vykladky
 
 /*
+jde dosahnout konce v optimalnim casu (ocekava stejny pocet vsech typu lodi) - v optimalnim pripade to tak jde poskladat...
+*/
+E<> prist.Konec and cas_prvni == (queue_size / 3) * delka_vykladky
 
+/*
+kontrola...
 */
 A[] not deadlock
