@@ -1,6 +1,16 @@
 //This file was generated from (Academic) UPPAAL 4.0.13 (rev. 4577), September 2010
 
 /*
+
+*/
+E<> cas < cas_prvni
+
+/*
+chytry pristav nebude na stejne fronte lodi nikdy horsi nez hloupy
+*/
+A<> cas <= cas_prvni
+
+/*
 chytry pristav ma lepsi horni limit v nejhorsim pripade
 */
 E<> prist_ch.Konec and cas > 36
